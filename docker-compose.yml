@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  # PostgreSQL database for the Django backend.
+  postgres:
+    image: postgres:15-alpine
+    container_name: schoolpay_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-schoolpay}
+      POSTGRES_USER: ${POSTGRES_USER:-schoolpay}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-schoolpay}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-schoolpay} -d ${POSTGRES_DB:-schoolpay}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Redis: Celery broker/result backend and Django cache.
+  redis:
+    image: redis:7-alpine
+    container_name: schoolpay_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:
