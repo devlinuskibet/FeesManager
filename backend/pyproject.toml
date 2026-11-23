@@ -1,0 +1,57 @@
+[project]
+name = "schoolpay-backend"
+version = "0.1.0"
+description = "School Fee and Payment Tracker with M-Pesa reconciliation"
+requires-python = ">=3.11"
+dependencies = [
+    "Django>=5.0,<5.1",
+    "djangorestframework>=3.15,<4.0",
+    "djangorestframework-simplejwt>=5.5,<6.0",
+    "drf-spectacular>=0.27,<1.0",
+    "django-cors-headers>=4.3,<5.0",
+    "django-filter>=23.2,<24.0",
+    "python-decouple>=3.8,<4.0",
+    "psycopg2-binary>=2.9,<3.0",
+    "celery>=5.4,<6.0",
+    "redis>=5.0,<6.0",
+    "factory-boy>=3.3,<4.0",
+    "responses>=0.24,<1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3,<9.0",
+    "pytest-django>=4.8,<5.0",
+    "ruff>=0.8,<1.0",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["apps", "apps.accounts", "apps.academics", "apps.students", "apps.tenants", "config"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+src = ["apps", "config"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "C4", "DTZ", "TRY0", "PLC", "PD"]
+ignore = ["E501", "B008", "PLC0415"]
+# Allow importing models inside function bodies (used by the tenant middleware
+# to avoid app-registry circular imports).
+
+[tool.ruff.format]
+# Match Black style: double quotes, trailing comma in magic trailing comma.
+quote-style = "double"
+
+[tool.black]
+line-length = 120
+
+[tool.pytest.ini_options]
+django_settings_module = "config.settings.dev"
+pythonpaths = ["."]
+addopts = "-p no:cacheprovider --disable-warnings -q"
+testpaths = ["apps"]
