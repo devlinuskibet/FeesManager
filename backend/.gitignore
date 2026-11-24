@@ -1,6 +1,28 @@
+# Secrets and local environment (the template stays tracked)
 .env
-.venv
-__pycache__
-db.sqlite3
-schoolpay_backend.egg-info
+.env.*
+!.env.example
+.venv/
+venv/
 
+# Python build and cache artefacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local databases
+db.sqlite3
+*.sqlite3
+
+# Celery beat schedule
+celerybeat-schedule*
+
+# Editors and operating system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
