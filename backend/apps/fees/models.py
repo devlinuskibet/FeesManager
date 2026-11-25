@@ -291,3 +291,19 @@ class Discount(TenantMixin):
         # Approval trail: the requester cannot approve their own request.
         if self.approved_by_id and self.requested_by_id == self.approved_by_id:
             raise ValidationError(_("Requester cannot be the approver."))
+
+
+class InvoiceSequence(TenantMixin):
+    """Per-school, per-year counter for sequential invoice numbering."""
+
+    year = models.PositiveSmallIntegerField(_("year"))
+    last_value = models.PositiveIntegerField(_("last value"), default=0)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["school", "year"], name="fees_invseq_uni"),
+        ]
+        ordering = ["school", "year"]
+
+    def __str__(self) -> str:
+        return f"{self.school_id}-{self.year}: {self.last_value}"
